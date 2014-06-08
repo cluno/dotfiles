@@ -1,0 +1,44 @@
+# Usage: `brew bundle brewfile`
+update
+upgrade
+
+install coreutils
+install moreutils
+install findutils
+
+# Note: create symbolic link (ln -s /usr/local/bin/bash /bin/bash)
+install bash
+install bash-completion
+
+tap homebrew/dupes
+install binutils
+install diffutils
+install ed --default-names
+install findutils --default-names
+install gawk
+install gnu-indent --default-names
+install gnu-sed --default-names
+install gnu-tar --default-names
+install gnu-which --default-names
+install gnutls --default-names
+install grep --default-names
+install gzip
+install watch
+install wdiff --with-gettext
+install wget
+
+# others
+install cmake
+install python
+install libgit2
+
+install ctags
+install zsh
+install vim -env-std --override-system-vim
+install tmux
+install tree
+install htop
+install tig
+install reattach-to-user-namespace
+
+cleanup

@@ -1,11 +1,20 @@
-set encoding=utf-8
-set clipboard=unnamedplus
+set background=dark
+colorscheme womprat
 
 if has('terminfo') && (&term == 'xterm-256color' || &term == 'xterm' || &term == 'screen-256color')
   set t_Co=256
 endif
 
-color womprat
+set clipboard=unnamed,autoselect
+set nocompatible
+set esckeys
+set wildmenu
+set encoding=utf-8 nobomb
+set mouse=a
+set ttyfast
+set gdefault
+set binary
+set noeol
 
 " No backup
 set nobackup
@@ -33,18 +42,26 @@ nmap <leader>e :q!<cr>
 nmap <leader>E :qa!<cr>
 nmap <leader>w :w!<cr>
 
-" Commenting blocks of code
-" http://stackoverflow.com/questions/1676632
+" Comment/Uncomment (http://stackoverflow.com/questions/1676632)
 autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
 autocmd FileType sh,ruby,python   let b:comment_leader = '# '
 autocmd FileType conf,fstab       let b:comment_leader = '# '
 autocmd FileType tex              let b:comment_leader = '% '
 autocmd FileType vim              let b:comment_leader = '" '
-noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
-noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+noremap <silent> <leader>cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> <leader>cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
 
-" TagBar
-" https://github.com/majutsushi/tagbar/blob/master/doc/tagbar.txt
+" Strip trailing whitespace (\ss)
+function! StripWhitespace()
+	let save_cursor = getpos(".")
+	let old_query = getreg('/')
+	:%s/\s\+$//e
+	call setpos('.', save_cursor)
+	call setreg('/', old_query)
+endfunction
+nmap <leader>ss :call StripWhitespace()<cr>
+
+" TagBar (https://github.com/majutsushi/tagbar/blob/master/doc/tagbar.txt)
 let g:tagbar_left = 1
 let g:tagbar_width = 30
 let g:tagbar_singleclick = 1
@@ -53,12 +70,11 @@ let g:tagbar_autoshowtag = 0
 
 " NERDTree
 let g:NERDTreeWinPos = "right"
-let g:NERDTreeChristmasTree = 0
 let g:NERDTreeCaseSensitiveSort = 1
 let g:NERDTreeQuitOnOpen = 0
 let g:NERDTreeWinSize = 40
 let g:NERDTreeShowBookmarks = 2
-let g:NERDTreeDirArrows=1
+let g:NERDTreeDirArrows = 1
 
 " ctags
 if has('unix')
@@ -68,39 +84,44 @@ if has('unix')
   endif
 endif
 
-" Open NERDTree and TagBar
-" http://stackoverflow.com/questions/6624043
+" Open NERDTree and TagBar (http://stackoverflow.com/questions/6624043)
 function! ToggleNERDTreeAndTagbar()
-    let w:jumpbacktohere = 1
+  let w:jumpbacktohere = 1
 
-    " Detect which plugins are open
-    if exists('t:NERDTreeBufName')
-        let nerdtree_open = bufwinnr(t:NERDTreeBufName) != -1
-    else
-        let nerdtree_open = 0
+  " Detect which plugins are open
+  if exists('t:NERDTreeBufName')
+    let nerdtree_open = bufwinnr(t:NERDTreeBufName) != -1
+  else
+    let nerdtree_open = 0
+  endif
+  let tagbar_open = bufwinnr('__Tagbar__') != -1
+
+  " Perform the appropriate action
+  if nerdtree_open && tagbar_open
+    NERDTreeClose
+    TagbarClose
+  elseif nerdtree_open
+    TagbarOpen
+  elseif tagbar_open
+    NERDTree
+  else
+    NERDTree
+    TagbarOpen
+  endif
+
+  " Jump back to the original window
+  for window in range(1, winnr('$'))
+    execute window . 'wincmd w'
+    if exists('w:jumpbacktohere')
+      unlet w:jumpbacktohere
+      break
     endif
-    let tagbar_open = bufwinnr('__Tagbar__') != -1
-
-    " Perform the appropriate action
-    if nerdtree_open && tagbar_open
-        NERDTreeClose
-        TagbarClose
-    elseif nerdtree_open
-        TagbarOpen
-    elseif tagbar_open
-        NERDTree
-    else
-        NERDTree
-        TagbarOpen
-    endif
-
-    " Jump back to the original window
-    for window in range(1, winnr('$'))
-        execute window . 'wincmd w'
-        if exists('w:jumpbacktohere')
-            unlet w:jumpbacktohere
-            break
-        endif
-    endfor
+  endfor
 endfunction
 nmap <leader>\ :call ToggleNERDTreeAndTagbar()<CR>
+
+if has("autocmd")
+  filetype on
+  " Treat .json files as .js
+  autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
+endif

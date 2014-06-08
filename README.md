@@ -1,5 +1,17 @@
-Requirements
----------
+dotfiles
+--------
+#### checkout
+    git clone --recursive git@github.com:cluno/dotfiles.git ~/.dotfiles
+
+#### symbolic links    
+    ln -s ~/.dotfiles/janus ~/.janus
+    ln -s ~/.dotfiles/.vimrc.after ~/.vimrc.after
+    ln -s ~/.dotfiles/.tmux.conf ~/.tmux.conf
+    ln -s ~/.dotfiles/.ctags ~/.ctags
+    ln -s ~/.dotfiles/.zpreztorc ~/.zpreztorc
+    
+requirements
+--------
 #### brew
     ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
     
@@ -30,29 +42,18 @@ Requirements
 #### janus for vim
     curl -Lo- https://bit.ly/janus-bootstrap | bash
      
-dotfiles
--------
-#### checkout
-    git clone --recursive git@github.com:cluno/dotfiles.git ~/.dotfiles
-
-#### symbolic links    
-    ln -s ~/.dotfiles/janus ~/.janus
-    ln -s ~/.dotfiles/.vimrc.after ~/.vimrc.after
-    ln -s ~/.dotfiles/.tmux.conf ~/.tmux.conf
-    ln -s ~/.dotfiles/.ctags ~/.ctags
-    ln -s ~/.dotfiles/.zpreztorc ~/.zpreztorc
     
-Theme
------
+theme
+--------
 #### powerline
     pip install git+git://github.com/Lokaltog/powerline
 
 #### tmux
-    echo source /usr/local/lib/python2.7/site-packages/powerline/bindings/tmux.conf >> ~/.tmux.conf 
+use ~/.tmux.conf
 
-#### prezto
+#### zsh (prezto)
     cd ~/.zprezto/module/prompt/function
     ln -s ~/.dotfiles/prompt_superlinh_setup
     
-#### vim
+#### vim (airline)
 use vim-airline in ~/.janus

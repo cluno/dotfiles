@@ -1,0 +1,106 @@
+set encoding=utf-8
+set clipboard=unnamedplus
+
+if has('terminfo') && (&term == 'xterm-256color' || &term == 'xterm' || &term == 'screen-256color')
+  set t_Co=256
+endif
+
+color womprat
+
+" No backup
+set nobackup
+set nowritebackup
+set noswapfile
+
+" Window navigations
+nmap <c-j> <c-w>j
+nmap <c-k> <c-w>k
+nmap <c-l> <c-w>l
+nmap <c-h> <c-w>h
+nmap <c-_> <c-w>-
+nmap <c-0> <c-w>+
+
+" Tab navigations
+nmap <leader>tn :tabnew! %<cr>
+nmap <leader>te :tabedit<cr>
+nmap <leader>tc :tabclose<cr>
+nmap <leader>tm :tabmove<cr>
+nmap <leader>th :tabp<cr>
+nmap <leader>tl :tabn<cr>
+
+" Fast quit/save
+nmap <leader>e :q!<cr>
+nmap <leader>E :qa!<cr>
+nmap <leader>w :w!<cr>
+
+" Commenting blocks of code
+" http://stackoverflow.com/questions/1676632
+autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
+autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+autocmd FileType conf,fstab       let b:comment_leader = '# '
+autocmd FileType tex              let b:comment_leader = '% '
+autocmd FileType vim              let b:comment_leader = '" '
+noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
+" TagBar
+" https://github.com/majutsushi/tagbar/blob/master/doc/tagbar.txt
+let g:tagbar_left = 1
+let g:tagbar_width = 30
+let g:tagbar_singleclick = 1
+let g:tagbar_expand = 0
+let g:tagbar_autoshowtag = 0
+
+" NERDTree
+let g:NERDTreeWinPos = "right"
+let g:NERDTreeChristmasTree = 0
+let g:NERDTreeCaseSensitiveSort = 1
+let g:NERDTreeQuitOnOpen = 0
+let g:NERDTreeWinSize = 40
+let g:NERDTreeShowBookmarks = 2
+let g:NERDTreeDirArrows=1
+
+" ctags
+if has('unix')
+  let s:uname = system('echo -n "$(uname)"')
+  if !v:shell_error && s:uname == 'Darwin'
+    let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
+  endif
+endif
+
+" Open NERDTree and TagBar
+" http://stackoverflow.com/questions/6624043
+function! ToggleNERDTreeAndTagbar()
+    let w:jumpbacktohere = 1
+
+    " Detect which plugins are open
+    if exists('t:NERDTreeBufName')
+        let nerdtree_open = bufwinnr(t:NERDTreeBufName) != -1
+    else
+        let nerdtree_open = 0
+    endif
+    let tagbar_open = bufwinnr('__Tagbar__') != -1
+
+    " Perform the appropriate action
+    if nerdtree_open && tagbar_open
+        NERDTreeClose
+        TagbarClose
+    elseif nerdtree_open
+        TagbarOpen
+    elseif tagbar_open
+        NERDTree
+    else
+        NERDTree
+        TagbarOpen
+    endif
+
+    " Jump back to the original window
+    for window in range(1, winnr('$'))
+        execute window . 'wincmd w'
+        if exists('w:jumpbacktohere')
+            unlet w:jumpbacktohere
+            break
+        endif
+    endfor
+endfunction
+nmap <leader>\ :call ToggleNERDTreeAndTagbar()<CR>

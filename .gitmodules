@@ -1,0 +1,12 @@
+[submodule ".janus/vim-airline"]
+	path = .janus/vim-airline
+	url = https://github.com/bling/vim-airline.git
+[submodule ".janus/vim-womprat"]
+	path = .janus/vim-womprat
+	url = https://github.com/jtai/vim-womprat.git
+[submodule ".janus/dracula-theme"]
+	path = .janus/dracula-theme
+	url = https://github.com/zenorocha/dracula-theme.git
+[submodule ".janus/vim-scala"]
+	path = .janus/vim-scala
+	url = https://github.com/derekwyatt/vim-scala.git

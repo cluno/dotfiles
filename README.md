@@ -7,7 +7,7 @@ Requirements
     echo export PATH='/usr/local/bin:$PATH' >> ~/.bash_profile
     brew doctor
     
-#### brew bundle (coreutils, tmux, vim, zsh & etc)
+#### brew bundle (coreutils, python, vim, zsh, tmux & etc)
     cd ~/.dotfiles
     brew bundle brewfile 
 

@@ -57,3 +57,10 @@ use ~/.tmux.conf
     
 #### vim (airline)
 use vim-airline in ~/.janus
+
+links
+--------
+* http://leonard.io/blog/2013/04/editing-scala-with-vim/
+* https://gist.github.com/tim-smart/199338
+* http://linhmtran168.github.io/blog/2013/12/15/ditching-oh-my-zsh-for-prezto/
+* http://deploymentzone.com/2013/10/23/mavericks-day-2-with-macvim-python-and-crashing/

@@ -20,7 +20,7 @@ Install
      -z: install (Z)sh
 
 #### Install all packages except brew
-    ~/.dotfiles/install -dpvztl
+    ~/.dotfiles/install.sh
 
 Todo
 -------

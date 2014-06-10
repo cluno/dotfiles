@@ -105,7 +105,7 @@ function install_python {
 
 function install_zsh {
   echo "Installing zsh..."
-  
+
   if [ -d $HOME/.oh-my-zsh ]; then
     echo "Delete oh-my-zsh..."
     rm -rf $HOME/.oh-my-zsh
@@ -185,7 +185,10 @@ function install_dotfiles {
   echo "Installing dotfiles..."
 
   pushd $HOME >> /dev/null
-  dotfiles=('.ctags' '.tmux.conf' '.vimrc.after' '.zpreztorc')
+	echo "ln -sf $DOTDIR/janus $HOME/.janus"
+	ln -sf $DOTDIR/janus $HOME/.janus
+
+  dotfiles=('.ctags' '.tmux.conf' '.vimrc.before' '.vimrc.after' '.zpreztorc')
   for file in "${dotfiles[@]}"; do
     echo ln -sf $DOTDIR/$file
     ln -sf $DOTDIR/$file
@@ -215,7 +218,7 @@ function usage {
   printf -- ' -d: install (D)ot files\n' >&2
   printf -- ' -l: install Power(L)ine\n' >&2
   printf -- ' -p: install (P)ython\n' >&2
-	printf -- ' -r: (R)emove brew\n' >&2
+  printf -- ' -r: (R)emove brew\n' >&2
   printf -- ' -t: install (T)mux\n' >&2
   printf -- ' -v: install (V)im\n' >&2
   printf -- ' -z: install (Z)sh\n' >&2
@@ -224,19 +227,18 @@ function usage {
 if [ $# -eq 0 ]; then
   all
 else
-  while getopts 'abdlprtvz' OPTION
-  do
-    case $OPTION in
-      a)    all;;
-      b)    install_brew;;
-      d)    install_dotfiles;;
-      l)    install_powerline;;
-      p)    install_python;;
-      r)    remove_brew;;
-      t)    install_tmux;;
-      v)    install_vim;;
-      z)    install_zsh;;
-      ?)    usage;;
+  while getopts 'abdlprtvz' OPTION; do
+		case $OPTION in
+			a)    all;;
+			b)    install_brew;;
+			d)    install_dotfiles;;
+			l)    install_powerline;;
+			p)    install_python;;
+			r)    remove_brew;;
+			t)    install_tmux;;
+			v)    install_vim;;
+			z)    install_zsh;;
+			?)    usage;;
     esac
   done
   shift $(($OPTIND - 1))

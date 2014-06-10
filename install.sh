@@ -142,6 +142,7 @@ function install_tmux {
   if [ "$OS" = "Darwin" ]; then
     if [ ! -f /usr/bin/local/tmux ]; then
       $install tmux
+      $install reattach-to-user-namespace
     fi
   elif [ "$OS" = "Ubuntu" ] || [ "$OS" = "Debian" ]; then
     if [ ! -f /usr/bin/tmux ]; then
@@ -228,17 +229,17 @@ if [ $# -eq 0 ]; then
   all
 else
   while getopts 'abdlprtvz' OPTION; do
-		case $OPTION in
-			a)    all;;
-			b)    install_brew;;
-			d)    install_dotfiles;;
-			l)    install_powerline;;
-			p)    install_python;;
-			r)    remove_brew;;
-			t)    install_tmux;;
-			v)    install_vim;;
-			z)    install_zsh;;
-			?)    usage;;
+    case $OPTION in
+      a)    all;;
+      b)    install_brew;;
+      d)    install_dotfiles;;
+      l)    install_powerline;;
+      p)    install_python;;
+      r)    remove_brew;;
+      t)    install_tmux;;
+      v)    install_vim;;
+      z)    install_zsh;;
+      ?)    usage;;
     esac
   done
   shift $(($OPTIND - 1))

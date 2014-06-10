@@ -197,10 +197,9 @@ function install_dotfiles {
 }
 
 function all {
-  echo "Installing all packages..."
+  echo "Installing all packages except brew..."
 
   install_dotfiles
-  install_brew
   install_zsh
   install_python
   install_vim
@@ -211,11 +210,12 @@ function all {
 function usage {
   printf '\nUsage: %s [-abdlptz]\n\n' $(basename $0) >&2
   printf 'options:\n' >&2
-  printf -- ' -a: (default) install (A)ll packages\n' >&2
+  printf -- ' -a: (default) install (A)ll packages except brew\n' >&2
   printf -- ' -b: install (B)rew\n' >&2
   printf -- ' -d: install (D)ot files\n' >&2
   printf -- ' -l: install Power(L)ine\n' >&2
   printf -- ' -p: install (P)ython\n' >&2
+	printf -- ' -r: (R)emove brew\n' >&2
   printf -- ' -t: install (T)mux\n' >&2
   printf -- ' -v: install (V)im\n' >&2
   printf -- ' -z: install (Z)sh\n' >&2
@@ -224,7 +224,7 @@ function usage {
 if [ $# -eq 0 ]; then
   all
 else
-  while getopts 'abdlprrtvz' OPTION
+  while getopts 'abdlprtvz' OPTION
   do
     case $OPTION in
       a)    all;;

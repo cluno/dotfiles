@@ -2,10 +2,8 @@ Download
 --------
     git clone --recursive git@github.com:cluno/dotfiles.git ~/.dotfiles
 
-Install
+Usage
 --------
-##### Usage
-
     Usage: install.sh [-abdlptz]
 
     options:

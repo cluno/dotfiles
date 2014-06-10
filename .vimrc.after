@@ -7,6 +7,10 @@ endif
 
 set clipboard=unnamed,autoselect
 set nocompatible
+set smartindent
+set tabstop=4
+set shiftwidth=4
+set expandtab
 set esckeys
 set wildmenu
 set encoding=utf-8 nobomb

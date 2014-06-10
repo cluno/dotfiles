@@ -62,6 +62,7 @@ function install_python {
   echo "Installing python..."
 
   if [ "$OS" = "Darwin" ]; then
+
     if [ ! -f /usr/local/bin/cmake ]; then
       $install cmake
     fi
@@ -74,20 +75,22 @@ function install_python {
     if [ ! -f /usr/local/lib/libgit2.dylib ]; then
       $install libgit2
     fi
+
   elif [ "$OS" = "Ubuntu" ] || [ "$OS" = "Debian" ]; then
-    brew update
-    brew doctor
-    if [ ! -f /usr/local/bin/cmake ]; then
+
+	# TODO: Not tested
+    if [ ! -f /usr/bin/cmake ]; then
       $install cmake
     fi
 
-    if [ ! -f /usr/local/bin/python ]; then
+    if [ ! -f /usr/bin/python ]; then
       $install python
     fi
 
-    if [ ! -f /usr/local/lib/libgit2.dylib ]; then
+    if [ ! -f /usr/lib/libgit2.so ]; then
       $install libgit2
     fi
+
   fi
 
   echo "Installing python packages for powerline"
@@ -186,8 +189,8 @@ function install_dotfiles {
   echo "Installing dotfiles..."
 
   pushd $HOME >> /dev/null
-	echo "ln -sf $DOTDIR/janus $HOME/.janus"
-	ln -sf $DOTDIR/janus $HOME/.janus
+  echo "ln -sf $DOTDIR/janus $HOME/.janus"
+  ln -sf $DOTDIR/janus $HOME/.janus
 
   dotfiles=('.ctags' '.tmux.conf' '.vimrc.before' '.vimrc.after' '.zpreztorc')
   for file in "${dotfiles[@]}"; do

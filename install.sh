@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# dotfiels install script for Mac & Ubuntu
+# Install script for Mac & Ubuntu's dotfiles
 # (Not tested yet for Ubuntu)
 
 set -e
 
-DOTDIR=$HOME/.dotfiles
+DOTDIR=$(cd `dirname $0` && pwd)
 
 test -e /etc/*-rel-* &> /dev/null && OS="Ubuntu"
 if [ "$OS" = "Ubuntu" ] || [ "$OS" = "Debian" ]; then
@@ -33,7 +33,6 @@ function install_brew {
 
  else
     ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-
     brew update
     brew doctor
 
@@ -47,7 +46,9 @@ function install_brew {
 }
 
 function remove_brew {
-  cd `brew --prefix`
+  echo "Removing homebrew..."
+
+  pushd `brew --prefix` >> /dev/null
   rm -rf Cellar
   brew prune
   rm `git ls-files`
@@ -56,13 +57,13 @@ function remove_brew {
   rm -rf ~/Library/Caches/Homebrew
   rm -rf ~/Library/Logs/Homebrew
   rm -rf /Library/Caches/Homebrew
+  popd >> /dev/null
 }
 
 function install_python {
   echo "Installing python..."
 
   if [ "$OS" = "Darwin" ]; then
-
     if [ ! -f /usr/local/bin/cmake ]; then
       $install cmake
     fi
@@ -75,10 +76,8 @@ function install_python {
     if [ ! -f /usr/local/lib/libgit2.dylib ]; then
       $install libgit2
     fi
-
   elif [ "$OS" = "Ubuntu" ] || [ "$OS" = "Debian" ]; then
-
-	# TODO: Not tested
+    # TODO: Not tested
     if [ ! -f /usr/bin/cmake ]; then
       $install cmake
     fi
@@ -90,10 +89,10 @@ function install_python {
     if [ ! -f /usr/lib/libgit2.so ]; then
       $install libgit2
     fi
-
   fi
 
-  echo "Installing python packages for powerline"
+  echo "Installing python packages for powerline..."
+
   export CFLAGS=-Qunused-arguments
   export CPPFLAGS=-Qunused-arguments
   sudo easy_install pip
@@ -101,9 +100,9 @@ function install_python {
   pip install pygit2
   pip install psutil
 
-  echo "Create symbolic link: /usr/local/lib/python2.7/config"
   LATEST_VER=$(ls -1 '/usr/local/Cellar/python' | xargs -n1 | sort -n | tail -1)
   ln -s /usr/local/Cellar/python/$LATEST_VER/Frameworks/Python.framework/Versions/Current/lib/python2.7/config /usr/local/lib/python2.7/config
+  echo "Created symbolic link -> /usr/local/lib/python2.7/config"
 }
 
 function install_zsh {
@@ -142,6 +141,7 @@ function install_zsh {
 
 function install_tmux {
   echo "Installing tmux..."
+
   if [ "$OS" = "Darwin" ]; then
     if [ ! -f /usr/bin/local/tmux ]; then
       $install tmux
@@ -156,6 +156,7 @@ function install_tmux {
 
 function install_vim {
   echo "Installing vim and ctags..."
+
   if [ "$OS" = "Darwin" ]; then
     $install vim -env-std --override-system-vim
 
@@ -171,6 +172,7 @@ function install_vim {
   fi
 
   echo "Installing janus..."
+
   if [ ! -f $HOME/.vim ]; then
     BAKDIR=$HOME/.backup/$(date +%m%d-%H%M)
     mv $HOME/.vim $BAKDIR
@@ -182,6 +184,7 @@ function install_vim {
 
 function install_powerline {
   echo "Installing powerline..."
+
   pip install git+git://github.com/Lokaltog/powerline
 }
 
@@ -199,7 +202,9 @@ function install_dotfiles {
   done
   popd >> /dev/null
 
+
   echo "Installing zprezto theme..."
+
   ln -sf $DOTDIR/prompt_superlinh_setup $HOME/.zprezto/modules/prompt/functions
 }
 
